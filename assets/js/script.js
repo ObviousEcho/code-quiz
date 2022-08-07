@@ -1,4 +1,4 @@
-// array containing quiz questios
+// array containing quiz questions
 var gameArray = [
   (one = {
     question: "Which of the following is not a JS array method?",
@@ -48,14 +48,36 @@ var list = document.getElementById("list");
 // var's to help iterate through gameArray
 var index = 0;
 var items = gameArray[index].options;
-
+// retrieves buttons with class of btn in an array
+var btns = document.getElementsByClassName("btn");
+// variable to compare answers and keep score
+var answer = gameArray[index].answer;
+var score = 0;
 // ================================================================
 
 beginGame();
 
 function init() {
-appendChildren(list, items);
-questionHeading();
+  appendChildren(list, items);
+  questionHeading();
+
+  // stores most recent button clicked in var
+  var btnClicked;
+  // eventListener for button clicks
+  // loop through array of buttons applying eventListener to each
+  for (i = 0; i < btns.length; i++) {
+    btns[i].addEventListener("click", function (event) {
+      var element = event.target;
+      btnClicked = element.textContent;
+      if(btnClicked === answer) {
+        index++;
+        score++;
+        correct();
+      } else {
+        incorrect();
+      }
+    });
+  }
 }
 
 // function creates title and direction elements along with button to begin game
@@ -64,8 +86,8 @@ function beginGame() {
   var h2 = document.createElement("h2");
   var parag = document.createElement("p");
   var startBtn = document.createElement("button");
-  h2.textContent ="Test your knowledge of Javascript";
-  parag.textContent = "Click the start button to begin."
+  h2.textContent = "Test your knowledge of Javascript";
+  parag.textContent = "Click the start button to begin.";
   startBtn.textContent = "Start";
   div.appendChild(h2);
   div.appendChild(parag);
@@ -78,11 +100,11 @@ function beginGame() {
 // selects div with class start as created in beginGame function
 var startBtnEvent = document.querySelector(".start");
 // changes div class hidden (display: none) to remove content as game progresses
-startBtnEvent.addEventListener("click", function(){
+startBtnEvent.addEventListener("click", function () {
   var div = document.querySelector(".visible");
   div.setAttribute("class", "hidden");
   init();
-})
+});
 
 // function called above in gameArray.options
 // function creates <li><button> with answer options passed in from function call
@@ -110,15 +132,21 @@ function questionHeading() {
   main.insertBefore(headingTwo, list);
 }
 
-// eventListener for button clicks
-// retrieves buttons with class of btn in an array
-var btns = document.getElementsByClassName("btn");
-// stores most recent button clicked in var
-var btnClicked;
-// loop through array of buttons applying eventListener to each
-for(i = 0; i < btns.length; i++) {
-  btns[i].addEventListener("click", function(event) {
-    var element = event.target;
-    return btnClicked = element.textContent;
-  })
+// appends correct to document
+function correct() {
+  var parag = document.createElement("p");
+  parag.textContent = "Correct";
+  main.appendChild(parag);
+  parag.setAttribute("style", "border-top: 3px solid gray");
 }
+
+// appends incorrect to document
+function incorrect() {
+  var parag = document.createElement("p");
+  parag.textContent = "Incorrect";
+  main.appendChild(parag);
+  parag.setAttribute("style", "border-top: 3px solid gray");
+}
+
+
+
