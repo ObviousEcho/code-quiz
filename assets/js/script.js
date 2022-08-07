@@ -57,6 +57,7 @@ function createListItem(text) {
   var button = document.createElement("button");
   var li = document.createElement("li");
   li.textContent = text;
+  button.setAttribute("class", "btn");
   button.appendChild(li);
   return button;
 }
@@ -78,3 +79,16 @@ function questionHeading() {
 
 appendChildren(list, items);
 questionHeading();
+
+// eventListener for button clicks
+// retrieves buttons with class of btn in an array
+var btns = document.getElementsByClassName("btn");
+// stores most recent button clicked in var
+var btnClicked;
+// loop through array of buttons applying eventListener to each one
+for(i = 0; i < btns.length; i++) {
+  btns[i].addEventListener("click", function(event) {
+    var element = event.target;
+    return btnClicked = element.textContent;
+  })
+}
