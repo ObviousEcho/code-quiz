@@ -71,21 +71,31 @@ function init() {
     btns[i].addEventListener("click", function (event) {
       var element = event.target;
       btnClicked = element.textContent;
-      if (btnClicked === answer && index < gameArray.length) {
+      if (btnClicked === answer && index < gameArray.length -1) {
         index++;
         items = gameArray[index].options;
         answer = gameArray[index].answer;
         correct();
-        setTimeout(nextQuestion, 2000);
-      } else if (btnClicked !== answer && index < gameArray.length) {
+        setTimeout(nextQuestion, 1000);
+      } else if (btnClicked !== answer && index < gameArray.length -1) {
         index++;
         items = gameArray[index].options;
         answer = gameArray[index].answer;
         incorrect();
-        setTimeout(nextQuestion, 2000);
-      } else if (index === gameArray.length -1) {
-        console.log("You Lose!")
-      }
+        setTimeout(nextQuestion, 1000);
+      } else if (btnClicked === answer && index === gameArray.length -1) {
+        index = 0;
+        items = gameArray[index].options;
+        answer = gameArray[index].answer;
+        correct();
+        setTimeout(gameEnd, 1000);
+      } else if (btnClicked !== answer && index === gameArray.length -1) {
+        index = 0;
+        items = gameArray[index].options;
+        answer = gameArray[index].answer;
+        incorrect();
+        setTimeout(gameEnd, 1000);
+      } 
     });
   }
 }
@@ -170,12 +180,17 @@ function incorrect() {
 
 // clears continer for next question
 function nextQuestion() {
+  removeElem();
+  removeLiItems();
+  init();
+}
+
+// removes h2 and p elements
+function removeElem() {
   var h2 = document.querySelector(".question");
   var parag = document.getElementById("answer");
   h2.remove();
   parag.remove();
-  removeLiItems();
-  init();
 }
 
 // removes li items from document
@@ -183,4 +198,10 @@ function removeLiItems() {
   while(list.hasChildNodes()) {
     list.removeChild(list.firstChild);
   }
+}
+
+// removes questions from document, displays highscore form
+function gameEnd() {
+  removeElem();
+  removeLiItems();
 }
