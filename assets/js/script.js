@@ -53,28 +53,32 @@ var btns = document.getElementsByClassName("btn");
 // variable to compare answers and keep score
 var answer = gameArray[index].answer;
 var score = 0;
+
 // ================================================================
 
 beginGame();
 
+// core logic of game
 function init() {
-  appendChildren(list, items);
-  questionHeading();
+  game();
 
   // stores most recent button clicked in var
   var btnClicked;
+
   // eventListener for button clicks
   // loop through array of buttons applying eventListener to each
   for (i = 0; i < btns.length; i++) {
     btns[i].addEventListener("click", function (event) {
       var element = event.target;
       btnClicked = element.textContent;
-      if(btnClicked === answer) {
+      if (btnClicked === answer) {
         index++;
-        score++;
         correct();
+        setTimeout(nextQuestion, 2000);
       } else {
+        index++;
         incorrect();
+        setTimeout(nextQuestion, 2000);
       }
     });
   }
@@ -111,10 +115,10 @@ startBtnEvent.addEventListener("click", function () {
 function createListItem(text) {
   var button = document.createElement("button");
   var li = document.createElement("li");
-  li.textContent = text;
+  button.textContent = text;
   button.setAttribute("class", "btn");
-  button.appendChild(li);
-  return button;
+  li.appendChild(button);
+  return li;
 }
 
 // takes two arguments, parent/element and children/array
@@ -130,6 +134,14 @@ function questionHeading() {
   var headingTwo = document.createElement("h2");
   headingTwo.textContent = gameArray[index].question;
   main.insertBefore(headingTwo, list);
+  headingTwo.setAttribute("class", "question");
+}
+
+function game() {
+  questionHeading();
+  appendChildren(list, items);
+  console.log("index = " + index);
+  console.log("items = " + items);
 }
 
 // appends correct to document
@@ -138,6 +150,7 @@ function correct() {
   parag.textContent = "Correct";
   main.appendChild(parag);
   parag.setAttribute("style", "border-top: 3px solid gray");
+  parag.setAttribute("id", "answer");
 }
 
 // appends incorrect to document
@@ -146,7 +159,22 @@ function incorrect() {
   parag.textContent = "Incorrect";
   main.appendChild(parag);
   parag.setAttribute("style", "border-top: 3px solid gray");
+  parag.setAttribute("id", "answer");
 }
 
+// clears continer for next question
+function nextQuestion() {
+  var h2 = document.querySelector(".question");
+  var parag = document.getElementById("answer");
+  h2.remove();
+  parag.remove();
+  removeLiItems();
+  game();
+}
 
-
+// removes li items from document
+function removeLiItems() {
+  while(list.hasChildNodes()) {
+    list.removeChild(list.firstChild);
+  }
+}
