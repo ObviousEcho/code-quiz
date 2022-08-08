@@ -1,6 +1,6 @@
 // array containing quiz questions
 var gameArray = [
-  (one = {
+  zero = {
     question: "Which of the following is not a JS array method?",
     // the options array calls the createListItem function when each
     // index is iterated through, passing in a string as an argument
@@ -11,24 +11,24 @@ var gameArray = [
       createListItem("concat()"),
     ],
     answer: "JSON.parse()",
-  }),
-  (two = {
+  },
+  one = {
     question:
       "The document property returns the frame in which the window runs.",
     // the options array calls the createListItem function when each
     // index is iterated through, passing in a string as an argument
     options: [createListItem("True"), createListItem("False")],
     answer: "False",
-  }),
-  (three = {
+  },
+  two = {
     question:
       "Cookies are for client-server applications, while local storage is for client applications.",
     // the options array calls the createListItem function when each
     // index is iterated through, passing in a string as an argument
     options: [createListItem("True"), createListItem("False")],
     answer: "True",
-  }),
-  (four = {
+  },
+  three = {
     question: "Which of the following is not an Event Object?",
     // the options array calls the createListItem function when each
     // index is iterated through, passing in a string as an argument
@@ -39,7 +39,7 @@ var gameArray = [
       createListItem("DragEvent"),
     ],
     answer: "LifeChangingEvent",
-  }),
+  },
 ];
 
 // fetch elements from document
@@ -71,14 +71,20 @@ function init() {
     btns[i].addEventListener("click", function (event) {
       var element = event.target;
       btnClicked = element.textContent;
-      if (btnClicked === answer) {
+      if (btnClicked === answer && index < gameArray.length) {
         index++;
+        items = gameArray[index].options;
+        answer = gameArray[index].answer;
         correct();
         setTimeout(nextQuestion, 2000);
-      } else {
+      } else if (btnClicked !== answer && index < gameArray.length) {
         index++;
+        items = gameArray[index].options;
+        answer = gameArray[index].answer;
         incorrect();
         setTimeout(nextQuestion, 2000);
+      } else if (index === gameArray.length -1) {
+        console.log("You Lose!")
       }
     });
   }
@@ -138,10 +144,10 @@ function questionHeading() {
 }
 
 function game() {
+  console.log("index = " + index);
+  console.log("answer = " + answer);
   questionHeading();
   appendChildren(list, items);
-  console.log("index = " + index);
-  console.log("items = " + items);
 }
 
 // appends correct to document
@@ -169,7 +175,7 @@ function nextQuestion() {
   h2.remove();
   parag.remove();
   removeLiItems();
-  game();
+  init();
 }
 
 // removes li items from document
