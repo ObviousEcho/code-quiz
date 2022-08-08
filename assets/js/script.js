@@ -117,6 +117,7 @@ function beginGame() {
   main.appendChild(div);
 }
 
+// click to begin game!!!
 // selects div with class start as created in beginGame function
 var startBtnEvent = document.querySelector(".start");
 // changes div class hidden (display: none) to remove content as game progresses
@@ -204,4 +205,35 @@ function removeLiItems() {
 function gameEnd() {
   removeElem();
   removeLiItems();
+  form();
+}
+
+// creates input form dynamically
+function form() {
+  var h2 = document.createElement("h2");
+  var form = document.createElement("form");
+  var input = document.createElement("input");
+  h2.textContent = "Enter your initials to save your score.";
+  main.appendChild(h2);
+  form.appendChild(input);
+  main.appendChild(form);
+  input.setAttribute("type", "text");
+  input.setAttribute("id", "initial");
+  input.setAttribute("name", "initials");
+  form.setAttribute("class", "form");
+  submit();
+}
+
+// creates submit button
+function submit() {
+  var submit = document.createElement("input");
+  main.appendChild(submit);
+  submit.setAttribute("type", "submit");
+  submit.setAttribute("value", "submit");
+  submit.setAttribute("id", "submit");
+}
+
+// show response on submit
+function showResponse(event) {
+  event.preventDefault();
 }
