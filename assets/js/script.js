@@ -1,6 +1,6 @@
 // array containing quiz questions
 var gameArray = [
-  zero = {
+  (zero = {
     question: "Which of the following is not a JS array method?",
     // the options array calls the createListItem function when each
     // index is iterated through, passing in a string as an argument
@@ -11,24 +11,24 @@ var gameArray = [
       createListItem("concat()"),
     ],
     answer: "JSON.parse()",
-  },
-  one = {
+  }),
+  (one = {
     question:
       "The document property returns the frame in which the window runs.",
     // the options array calls the createListItem function when each
     // index is iterated through, passing in a string as an argument
     options: [createListItem("True"), createListItem("False")],
     answer: "False",
-  },
-  two = {
+  }),
+  (two = {
     question:
       "Cookies are for client-server applications, while local storage is for client applications.",
     // the options array calls the createListItem function when each
     // index is iterated through, passing in a string as an argument
     options: [createListItem("True"), createListItem("False")],
     answer: "True",
-  },
-  three = {
+  }),
+  (three = {
     question: "Which of the following is not an Event Object?",
     // the options array calls the createListItem function when each
     // index is iterated through, passing in a string as an argument
@@ -39,11 +39,12 @@ var gameArray = [
       createListItem("DragEvent"),
     ],
     answer: "LifeChangingEvent",
-  },
+  }),
 ];
 
 // fetch elements from document
 var main = document.getElementById("main");
+var div = document.querySelector(".container");
 var list = document.getElementById("list");
 // var's to help iterate through gameArray
 var index = 0;
@@ -52,8 +53,9 @@ var items = gameArray[index].options;
 var btns = document.getElementsByClassName("btn");
 // variable to compare answers and keep score
 var answer = gameArray[index].answer;
-var score = 0;
 
+// stores most recent button clicked in var
+var btnClicked;
 // ================================================================
 
 beginGame();
@@ -62,8 +64,6 @@ beginGame();
 function init() {
   game();
 
-  // stores most recent button clicked in var
-  var btnClicked;
 
   // eventListener for button clicks
   // loop through array of buttons applying eventListener to each
@@ -71,31 +71,31 @@ function init() {
     btns[i].addEventListener("click", function (event) {
       var element = event.target;
       btnClicked = element.textContent;
-      if (btnClicked === answer && index < gameArray.length -1) {
+      if (btnClicked === answer && index < gameArray.length - 1) {
         index++;
         items = gameArray[index].options;
         answer = gameArray[index].answer;
         correct();
         setTimeout(nextQuestion, 1000);
-      } else if (btnClicked !== answer && index < gameArray.length -1) {
+      } else if (btnClicked !== answer && index < gameArray.length - 1) {
         index++;
         items = gameArray[index].options;
         answer = gameArray[index].answer;
         incorrect();
         setTimeout(nextQuestion, 1000);
-      } else if (btnClicked === answer && index === gameArray.length -1) {
+      } else if (btnClicked === answer && index === gameArray.length - 1) {
         index = 0;
         items = gameArray[index].options;
         answer = gameArray[index].answer;
         correct();
         setTimeout(gameEnd, 1000);
-      } else if (btnClicked !== answer && index === gameArray.length -1) {
+      } else if (btnClicked !== answer && index === gameArray.length - 1) {
         index = 0;
         items = gameArray[index].options;
         answer = gameArray[index].answer;
         incorrect();
         setTimeout(gameEnd, 1000);
-      } 
+      }
     });
   }
 }
@@ -150,13 +150,12 @@ function appendChildren(parent, children) {
 function questionHeading() {
   var headingTwo = document.createElement("h2");
   headingTwo.textContent = gameArray[index].question;
-  main.insertBefore(headingTwo, list);
+  main.insertBefore(headingTwo, div);
   headingTwo.setAttribute("class", "question");
 }
 
 function game() {
-  console.log("index = " + index);
-  console.log("answer = " + answer);
+  setTime();
   questionHeading();
   appendChildren(list, items);
 }
@@ -165,7 +164,7 @@ function game() {
 function correct() {
   var parag = document.createElement("p");
   parag.textContent = "Correct";
-  main.appendChild(parag);
+  div.appendChild(parag);
   parag.setAttribute("style", "border-top: 3px solid gray");
   parag.setAttribute("id", "answer");
 }
@@ -174,7 +173,7 @@ function correct() {
 function incorrect() {
   var parag = document.createElement("p");
   parag.textContent = "Incorrect";
-  main.appendChild(parag);
+  div.appendChild(parag);
   parag.setAttribute("style", "border-top: 3px solid gray");
   parag.setAttribute("id", "answer");
 }
@@ -186,7 +185,7 @@ function nextQuestion() {
   init();
 }
 
-// removes h2 and p elements
+// removes h2, and p elements from document
 function removeElem() {
   var h2 = document.querySelector(".question");
   var parag = document.getElementById("answer");
@@ -196,7 +195,7 @@ function removeElem() {
 
 // removes li items from document
 function removeLiItems() {
-  while(list.hasChildNodes()) {
+  while (list.hasChildNodes()) {
     list.removeChild(list.firstChild);
   }
 }
@@ -212,15 +211,19 @@ function gameEnd() {
 function form() {
   var h2 = document.createElement("h2");
   var form = document.createElement("form");
+  var label = document.createElement("label");
   var input = document.createElement("input");
   h2.textContent = "Enter your initials to save your score.";
+  label.textContent = "Enter your initials";
   main.appendChild(h2);
+  form.appendChild(label);
   form.appendChild(input);
   main.appendChild(form);
+  label.setAttribute("for", "initial");
   input.setAttribute("type", "text");
   input.setAttribute("id", "initial");
   input.setAttribute("name", "initials");
-  form.setAttribute("class", "form");
+  form.setAttribute("id", "form");
   submit();
 }
 
@@ -233,7 +236,28 @@ function submit() {
   submit.setAttribute("id", "submit");
 }
 
-// show response on submit
-function showResponse(event) {
-  event.preventDefault();
+// timer function:
+var h3 = document.createElement("h3");
+var timeDiv = document.createElement("div");
+var timeEl = document.createElement("p");
+
+function setTime() {
+  var secondsLeft = 10;
+  // sets interval in variable
+  var timerInterval = setInterval(function () {
+      
+    // appends time to html
+      secondsLeft--;
+      h3.textContent = "Time Left:";
+      timeEl.textContent = secondsLeft;
+      timeDiv.setAttribute("id", "timer")
+      timeDiv.appendChild(h3);
+      timeDiv.appendChild(timeEl);
+      main.appendChild(timeDiv);
+
+      // game ends and timer stops at 0
+      if (secondsLeft <= 0) {
+          clearInterval(timerInterval);
+      } 
+  }, 1000);
 }
