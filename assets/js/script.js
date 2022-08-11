@@ -44,6 +44,7 @@ var gameArray = [
 
 // fetch elements from document
 var main = document.getElementById("main");
+var header = document.getElementById("header");
 var div = document.querySelector(".container");
 var list = document.getElementById("list");
 // var's to help iterate through gameArray
@@ -51,11 +52,12 @@ var index = 0;
 var items = gameArray[index].options;
 // retrieves buttons with class of btn in an array
 var btns = document.getElementsByClassName("btn");
-// variable to compare answers and keep score
+// variable to compare answers
 var answer = gameArray[index].answer;
-
 // stores most recent button clicked in var
 var btnClicked;
+// variable to store score
+var score = 0;
 // ================================================================
 
 beginGame();
@@ -73,6 +75,7 @@ function init() {
       btnClicked = element.textContent;
       if (btnClicked === answer && index < gameArray.length - 1) {
         index++;
+        score++;
         items = gameArray[index].options;
         answer = gameArray[index].answer;
         correct();
@@ -85,6 +88,7 @@ function init() {
         setTimeout(nextQuestion, 1000);
       } else if (btnClicked === answer && index === gameArray.length - 1) {
         index = 0;
+        score++;
         items = gameArray[index].options;
         answer = gameArray[index].answer;
         correct();
@@ -102,6 +106,7 @@ function init() {
 
 // function creates title and direction elements along with button to begin game
 function beginGame() {
+  getLocalStorage();
   var div = document.createElement("div");
   var h2 = document.createElement("h2");
   var parag = document.createElement("p");
@@ -183,6 +188,7 @@ function nextQuestion() {
   removeElem();
   removeLiItems();
   init();
+  // This is my problem!!!
 }
 
 // removes h2, and p elements from document
@@ -213,6 +219,7 @@ function form() {
   var form = document.createElement("form");
   var label = document.createElement("label");
   var input = document.createElement("input");
+  var submit = document.createElement("input");
   h2.textContent = "Enter your initials to save your score.";
   label.textContent = "Enter your initials";
   main.appendChild(h2);
@@ -222,24 +229,60 @@ function form() {
   label.setAttribute("for", "initial");
   input.setAttribute("type", "text");
   input.setAttribute("id", "initial");
-  input.setAttribute("name", "initials");
+  input.setAttribute("name", "initial");
   form.setAttribute("id", "form");
-  submit();
-}
-
-// creates submit button
-function submit() {
-  var submit = document.createElement("input");
-  main.appendChild(submit);
+  form.appendChild(submit);
   submit.setAttribute("type", "submit");
   submit.setAttribute("value", "submit");
   submit.setAttribute("id", "submit");
+
+  // eventListener for submit button
+  var inputForm = document.getElementById("form");
+  // captures users initial input from form and store to localStorage
+  inputForm.addEventListener("submit", function (event) {
+    var initialInput = document.getElementById("initial").value.trim();
+    event.preventDefault();
+    var yourScore = {
+      initials: initialInput,
+      score: score
+    }
+    if (initialInput !== "") {localStorage.setItem("initials", JSON.stringify(yourScore))
+    initialInput = "";
+    removeBestScore();
+    getLocalStorage();
+  } else {
+    return error();
+  }
+  });
+}
+
+// empty string error
+function error() {
+  var h6 = document.createElement("h6");
+  h6.textContent = "Invalid Entry!";
+  main.appendChild(h6);
+  h6.setAttribute("style", "color: red");
+}
+
+//   get localstorage
+function getLocalStorage() {
+  var initials = JSON.parse(localStorage.getItem("initials"));
+  if (initials !== null) {
+    var h5 = document.createElement("h5");
+    h5.textContent = "Initials: " + initials.initials + " Best Score: " + initials.score;
+    header.appendChild(h5);
+  }
+}
+
+// remove best score
+function removeBestScore() {
+  var removeH5 = document.querySelector("h5");
+  removeH5.remove();
 }
 
 // timer function:
 var h3 = document.createElement("h3");
-var timeDiv = document.createElement("div");
-var timeEl = document.createElement("p");
+var h4 = document.createElement("h4");
 
 function setTime() {
   var secondsLeft = 10;
@@ -249,11 +292,9 @@ function setTime() {
     // appends time to html
       secondsLeft--;
       h3.textContent = "Time Left:";
-      timeEl.textContent = secondsLeft;
-      timeDiv.setAttribute("id", "timer")
-      timeDiv.appendChild(h3);
-      timeDiv.appendChild(timeEl);
-      main.appendChild(timeDiv);
+      h4.textContent = secondsLeft;
+      header.appendChild(h3);
+      header.appendChild(h4);
 
       // game ends and timer stops at 0
       if (secondsLeft <= 0) {
