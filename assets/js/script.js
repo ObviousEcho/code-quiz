@@ -66,7 +66,6 @@ beginGame();
 function init() {
   game();
 
-
   // eventListener for button clicks
   // loop through array of buttons applying eventListener to each
   for (i = 0; i < btns.length; i++) {
@@ -130,6 +129,7 @@ startBtnEvent.addEventListener("click", function () {
   var div = document.querySelector(".visible");
   div.setAttribute("class", "hidden");
   init();
+  setTime();
 });
 
 // function called above in gameArray.options
@@ -160,7 +160,6 @@ function questionHeading() {
 }
 
 function game() {
-  setTime();
   questionHeading();
   appendChildren(list, items);
 }
@@ -240,19 +239,21 @@ function form() {
   var inputForm = document.getElementById("form");
   // captures users initial input from form and store to localStorage
   inputForm.addEventListener("submit", function (event) {
-    var initialInput = document.getElementById("initial").value.trim();
+    var initialInput = document.getElementById("initial");
     event.preventDefault();
     var yourScore = {
-      initials: initialInput,
-      score: score
+      initials: initialInput.value.trim(),
+      score: score,
+    };
+    // if text in input field, getLocalStorage, else display error msg
+    if (initialInput !== "") {
+      localStorage.setItem("initials", JSON.stringify(yourScore));
+      initialInput.value = "";
+      removeBestScore();
+      getLocalStorage();
+    } else {
+      return error();
     }
-    if (initialInput !== "") {localStorage.setItem("initials", JSON.stringify(yourScore))
-    initialInput = "";
-    removeBestScore();
-    getLocalStorage();
-  } else {
-    return error();
-  }
   });
 }
 
@@ -269,7 +270,8 @@ function getLocalStorage() {
   var initials = JSON.parse(localStorage.getItem("initials"));
   if (initials !== null) {
     var h5 = document.createElement("h5");
-    h5.textContent = "Initials: " + initials.initials + " Best Score: " + initials.score;
+    h5.textContent =
+      "Initials: " + initials.initials + " Best Score: " + initials.score;
     header.appendChild(h5);
   }
 }
@@ -285,20 +287,18 @@ var h3 = document.createElement("h3");
 var h4 = document.createElement("h4");
 
 function setTime() {
-  var secondsLeft = 10;
+  var secondsLeft = 30;
   // sets interval in variable
   var timerInterval = setInterval(function () {
-      
+    secondsLeft--;
+    if (secondsLeft <= 0) {
+      clearInterval(timerInterval);
+    }
     // appends time to html
-      secondsLeft--;
-      h3.textContent = "Time Left:";
-      h4.textContent = secondsLeft;
-      header.appendChild(h3);
-      header.appendChild(h4);
+    h3.textContent = "Time Left:";
+    h4.textContent = secondsLeft;
+    header.appendChild(h3);
+    header.appendChild(h4);
 
-      // game ends and timer stops at 0
-      if (secondsLeft <= 0) {
-          clearInterval(timerInterval);
-      } 
   }, 1000);
 }
