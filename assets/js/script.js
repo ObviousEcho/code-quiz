@@ -58,6 +58,8 @@ var answer = gameArray[index].answer;
 var btnClicked;
 // variable to store score
 var score = 0;
+// variable to store high score
+var highScore = [];
 // ================================================================
 
 beginGame();
@@ -247,9 +249,10 @@ function form() {
     };
     // if text in input field, getLocalStorage, else display error msg
     if (initialInput !== "") {
-      localStorage.setItem("initials", JSON.stringify(yourScore));
+      highScore.push(yourScore);
+      localStorage.setItem("high score", JSON.stringify(highScore));
       initialInput.value = "";
-      removeBestScore();
+      // removeBestScore();
       getLocalStorage();
     } else {
       return error();
@@ -267,13 +270,21 @@ function error() {
 
 //   get localstorage
 function getLocalStorage() {
-  var initials = JSON.parse(localStorage.getItem("initials"));
-  if (initials !== null) {
-    var h5 = document.createElement("h5");
-    h5.textContent =
-      "Initials: " + initials.initials + " Best Score: " + initials.score;
-    header.appendChild(h5);
-  }
+  var highScores = JSON.parse(localStorage.getItem("high score"));
+  highScore = highScores
+  console.log(highScore);
+  // for(i = 0; i < highScores.length; i ++) {
+
+  //   if (highScores !== null) {
+  //     // var h5 = document.createElement("h5");
+  //     // h5.textContent =
+  //     //   "Initials: " + initials + " Best Score: " + score;
+  //     // header.appendChild(h5);
+  //     console.log(highScores.initials);
+  //     console.log(highScores.score);
+  //   }
+  // }
+  
 }
 
 // remove best score
