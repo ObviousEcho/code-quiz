@@ -64,7 +64,6 @@ var highScore = [];
 
 beginGame();
 
-// core logic of game
 function init() {
   game();
 
@@ -74,6 +73,7 @@ function init() {
     btns[i].addEventListener("click", function (event) {
       var element = event.target;
       btnClicked = element.textContent;
+      // conditional statements compare button clicked to answer stored inside object on gameArray
       if (btnClicked === answer && index < gameArray.length - 1) {
         index++;
         score++;
@@ -161,6 +161,7 @@ function questionHeading() {
   headingTwo.setAttribute("class", "question");
 }
 
+// appends questioins and lists to document
 function game() {
   questionHeading();
   appendChildren(list, items);
@@ -189,7 +190,6 @@ function nextQuestion() {
   removeElem();
   removeLiItems();
   init();
-  // This is my problem!!!
 }
 
 // removes h2, and p elements from document
@@ -227,6 +227,7 @@ function form() {
   form.appendChild(label);
   form.appendChild(input);
   main.appendChild(form);
+  h2.setAttribute("id", "save-score");
   label.setAttribute("for", "initial");
   input.setAttribute("type", "text");
   input.setAttribute("id", "initial");
@@ -273,18 +274,17 @@ function getLocalStorage() {
   var highScores = JSON.parse(localStorage.getItem("high score"));
   highScore = highScores
   console.log(highScore);
-  // for(i = 0; i < highScores.length; i ++) {
+  for(i = 0; i < highScore.length; i ++) {
 
-  //   if (highScores !== null) {
-  //     // var h5 = document.createElement("h5");
-  //     // h5.textContent =
-  //     //   "Initials: " + initials + " Best Score: " + score;
-  //     // header.appendChild(h5);
-  //     console.log(highScores.initials);
-  //     console.log(highScores.score);
-  //   }
-  // }
-  
+    if (highScore !== null) {
+      // var h5 = document.createElement("h5");
+      // h5.textContent =
+      //   "Initials: " + initials + " Best Score: " + score;
+      // header.appendChild(h5);
+      console.log(highScore[i].initials);
+      console.log(highScore[i].score);
+    }
+  }
 }
 
 // remove best score
@@ -296,9 +296,9 @@ function removeBestScore() {
 // timer function:
 var h3 = document.createElement("h3");
 var h4 = document.createElement("h4");
+var secondsLeft = 30;
 
 function setTime() {
-  var secondsLeft = 30;
   // sets interval in variable
   var timerInterval = setInterval(function () {
     secondsLeft--;
@@ -306,10 +306,45 @@ function setTime() {
       clearInterval(timerInterval);
     }
     // appends time to html
-    h3.textContent = "Time Left:";
-    h4.textContent = secondsLeft;
-    header.appendChild(h3);
+    var header = document.getElementById("header");
+    h4.textContent = "Time: " + secondsLeft;
     header.appendChild(h4);
+    h4.setAttribute("id", "count-down");
 
   }, 1000);
+}
+
+// eventListener on view high score link
+var viewHighScore = document.getElementById("high-score");
+viewHighScore.addEventListener("click", function(event) {
+  event.preventDefault();
+  removeToViewHighScore();
+})
+
+// removes content from document
+function removeToViewHighScore() {
+  var title = document.querySelector(".visible");
+  var question = document.querySelector(".question");
+  var answer = document.getElementById("answer");
+  var form = document.getElementById("form");
+  var h2 = document.getElementById("save-score");
+  var timer = document.getElementById("count-down");
+
+  // remove elements from document if they exist
+  if(title !== null) {
+    title.remove();
+  } else if (question !== null && list !== null) {
+    timer.remove();
+    question.remove();
+    removeLiItems();
+  } else if (question !== null && list !== null && answer !== null) {
+    timer.remove();
+    question.remove();
+    removeLiItems();
+    answer.remove();
+  } else if (form !== null) {
+    timer.remove();
+    h2.remove();
+    form.remove();
+  }
 }
