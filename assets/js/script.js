@@ -366,3 +366,32 @@ function palyAgain() {
   main.appendChild(button);
   button.setAttribute("id", "play-again");
 }
+
+// event delegation, add eventListener to play again button
+function startOver(event) {
+  if (!event.target.matches("#play-again")) return;
+  var title = document.getElementById("save-score");
+  var form = document.getElementById("form");
+  var button = document.getElementById("play-again");
+  var invalid = document.getElementById("invalid");
+  console.log(event.target);
+  if (invalid !== null) {
+    title.remove();
+    form.remove();
+    invalid.remove();
+    button.remove();
+    beginGame();
+  } else if (title !== null && form !== null) {
+    title.remove();
+    form.remove();
+    button.remove();
+    beginGame();
+  } else {
+    removeLiItems();
+    button.remove();
+    beginGame();
+  }
+}
+
+main.addEventListener("click", startOver);
+
