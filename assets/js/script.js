@@ -249,14 +249,15 @@ function form() {
       score: score,
     };
     // if text in input field, getLocalStorage, else display error msg
-    if (initialInput !== "") {
+    if (yourScore.initials !== "") {
       highScore.push(yourScore);
       localStorage.setItem("high score", JSON.stringify(highScore));
       initialInput.value = "";
-      // removeBestScore();
       getLocalStorage();
+      palyAgain();
     } else {
-      return error();
+      error();
+      return palyAgain();
     }
   });
 }
@@ -267,30 +268,14 @@ function error() {
   h6.textContent = "Invalid Entry!";
   main.appendChild(h6);
   h6.setAttribute("style", "color: red");
+  h6.setAttribute("id", "invalid");
 }
 
 //   get localstorage
 function getLocalStorage() {
   var highScores = JSON.parse(localStorage.getItem("high score"));
-  highScore = highScores
+  highScore = highScores;
   console.log(highScore);
-  for(i = 0; i < highScore.length; i ++) {
-
-    if (highScore !== null) {
-      // var h5 = document.createElement("h5");
-      // h5.textContent =
-      //   "Initials: " + initials + " Best Score: " + score;
-      // header.appendChild(h5);
-      console.log(highScore[i].initials);
-      console.log(highScore[i].score);
-    }
-  }
-}
-
-// remove best score
-function removeBestScore() {
-  var removeH5 = document.querySelector("h5");
-  removeH5.remove();
 }
 
 // timer function:
@@ -310,16 +295,17 @@ function setTime() {
     h4.textContent = "Time: " + secondsLeft;
     header.appendChild(h4);
     h4.setAttribute("id", "count-down");
-
   }, 1000);
 }
 
 // eventListener on view high score link
 var viewHighScore = document.getElementById("high-score");
-viewHighScore.addEventListener("click", function(event) {
+viewHighScore.addEventListener("click", function (event) {
   event.preventDefault();
   removeToViewHighScore();
-})
+  appendHighScores();
+  palyAgain();
+});
 
 // removes content from document
 function removeToViewHighScore() {
@@ -329,9 +315,11 @@ function removeToViewHighScore() {
   var form = document.getElementById("form");
   var h2 = document.getElementById("save-score");
   var timer = document.getElementById("count-down");
+  var invalid = document.getElementById("invalid");
+  var playAgain = document.getElementById("play-again");
 
   // remove elements from document if they exist
-  if(title !== null) {
+  if (title !== null) {
     title.remove();
   } else if (question !== null && list !== null) {
     timer.remove();
@@ -346,5 +334,35 @@ function removeToViewHighScore() {
     timer.remove();
     h2.remove();
     form.remove();
+    if (invalid !== null && playAgain !== null) {
+      invalid.remove();
+      playAgain.remove();
+    }
   }
+}
+
+//   accesses localStorage to view high scores
+function appendHighScores() {
+  var highScores = JSON.parse(localStorage.getItem("high score"));
+  highScore = highScores;
+  console.log(highScore);
+  for (i = 0; i < highScore.length; i++) {
+    // if highScore has content
+    if (highScore !== null) {
+      console.log(highScore[i].initials);
+      console.log(highScore[i].score);
+      var li = document.createElement("li");
+      li.textContent =
+        "Initials: " + highScore[i].initials + " Score: " + highScore[i].score;
+      list.appendChild(li);
+    }
+  }
+}
+
+// play again button
+function palyAgain() {
+  var button = document.createElement("button");
+  button.textContent = "Play again!";
+  main.appendChild(button);
+  button.setAttribute("id", "play-again");
 }
