@@ -68,7 +68,7 @@ function init() {
   game();
 
   // eventListener for button clicks
-  // loop through array of buttons applying eventListener to each
+  // loop through array of buttons from gameArray.options, applying eventListener to each
   for (i = 0; i < btns.length; i++) {
     btns[i].addEventListener("click", function (event) {
       var element = event.target;
@@ -108,17 +108,21 @@ function init() {
 // function creates title and direction elements along with button to begin game
 function beginGame() {
   getLocalStorage();
+  // create elements
   var div = document.createElement("div");
   var h2 = document.createElement("h2");
   var parag = document.createElement("p");
   var startBtn = document.createElement("button");
+  // set content
   h2.textContent = "Test your knowledge of Javascript";
   parag.textContent = "Click the start button to begin.";
   startBtn.textContent = "Start";
+  // append content to document
   div.appendChild(h2);
   div.appendChild(parag);
   div.appendChild(startBtn);
   div.setAttribute("class", "visible");
+  // set attributes on content
   startBtn.setAttribute("class", "start");
   main.appendChild(div);
 }
@@ -161,13 +165,13 @@ function questionHeading() {
   headingTwo.setAttribute("class", "question");
 }
 
-// appends questioins and lists to document
+// appends questioins and lists to document, passing parent element and array as arguments
 function game() {
   questionHeading();
   appendChildren(list, items);
 }
 
-// appends correct to document
+// upon button click from multiple choice options, appends "correct" to document if answer is correct
 function correct() {
   var parag = document.createElement("p");
   parag.textContent = "Correct";
@@ -176,7 +180,7 @@ function correct() {
   parag.setAttribute("id", "answer");
 }
 
-// appends incorrect to document
+// upon button click from multiple choice options, appends "incorrect" to document if answer is incorrect
 function incorrect() {
   var parag = document.createElement("p");
   parag.textContent = "Incorrect";
@@ -216,17 +220,21 @@ function gameEnd() {
 
 // creates input form dynamically
 function form() {
+  // create elements
   var h2 = document.createElement("h2");
   var form = document.createElement("form");
   var label = document.createElement("label");
   var input = document.createElement("input");
   var submit = document.createElement("input");
+  // create content
   h2.textContent = "Enter your initials to save your score.";
   label.textContent = "Enter your initials";
+  // append content do DOM
   main.appendChild(h2);
   form.appendChild(label);
   form.appendChild(input);
   main.appendChild(form);
+  // set appributes on content
   h2.setAttribute("id", "save-score");
   label.setAttribute("for", "initial");
   input.setAttribute("type", "text");
@@ -243,7 +251,9 @@ function form() {
   // captures users initial input from form and store to localStorage
   inputForm.addEventListener("submit", function (event) {
     var initialInput = document.getElementById("initial");
+    // prevent default event on submit click
     event.preventDefault();
+    // store initials and score into an object
     var yourScore = {
       initials: initialInput.value.trim(),
       score: score,
@@ -262,7 +272,7 @@ function form() {
   });
 }
 
-// empty string error
+// empty string error if input field is left blank on submit
 function error() {
   var h6 = document.createElement("h6");
   h6.textContent = "Invalid Entry!";
@@ -275,7 +285,6 @@ function error() {
 function getLocalStorage() {
   var highScores = JSON.parse(localStorage.getItem("high score"));
   highScore = highScores;
-  console.log(highScore);
 }
 
 // timer function:
@@ -295,6 +304,7 @@ function setTime() {
     h4.textContent = "Time: " + secondsLeft;
     header.appendChild(h4);
     h4.setAttribute("id", "count-down");
+    // function runs every second
   }, 1000);
 }
 
@@ -345,12 +355,9 @@ function removeToViewHighScore() {
 function appendHighScores() {
   var highScores = JSON.parse(localStorage.getItem("high score"));
   highScore = highScores;
-  console.log(highScore);
   for (i = 0; i < highScore.length; i++) {
     // if highScore has content
     if (highScore !== null) {
-      console.log(highScore[i].initials);
-      console.log(highScore[i].score);
       var li = document.createElement("li");
       li.textContent =
         "Initials: " + highScore[i].initials + " Score: " + highScore[i].score;
@@ -369,12 +376,15 @@ function palyAgain() {
 
 // event delegation, add eventListener to play again button
 function startOver(event) {
+  // passing in event as an argument
+  // if the event does not match the id from the child element, then return and do nothing 
   if (!event.target.matches("#play-again")) return;
   var title = document.getElementById("save-score");
   var form = document.getElementById("form");
   var button = document.getElementById("play-again");
   var invalid = document.getElementById("invalid");
   console.log(event.target);
+  // otherwise perform the following based upon conditional statements
   if (invalid !== null) {
     title.remove();
     form.remove();
@@ -393,5 +403,7 @@ function startOver(event) {
   }
 }
 
+// event listener on the parent element, which runs the startOver function and ultimately delegates
+// to the child element if it exists
 main.addEventListener("click", startOver);
 
