@@ -4,7 +4,7 @@
 
 ## This is sloppy code!
 
-A great way to learn how to write clean code, is to immerse yourself is some sloppy code first!
+A great way to learn how to write clean code, is to immerse yourself in some sloppy code first!
 This project focused on the usage of Javascript.  I had fun with it and kept adding code to accomplish different things as those issues surfaced.  Through the process I learned what to expect from an application, and how to plan for it.  I can see the benefit from psuedo coding a project first, to keep form falling down a rabbit hole and having to claw your way back out with code that is less than intuitive.
 
 ---
@@ -41,6 +41,13 @@ As stated earlier, psuedo coding a project and spelling out what I want to accom
 ## Learn through doing
 
 This project is still buggy!  The timer functionality is not where is should be.  The start over function is not working either.  I can apply what I learned to the next project though, and make that one better.  This project will serve as marker of my coding progression!
+
+---
+
+## Check it out
+
+The deployed site can be viewed here:
+ [Code Quiz](https://obviousecho.github.io/code-quiz/)
 
 ---
 
