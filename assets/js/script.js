@@ -259,7 +259,6 @@ function form() {
       score: score,
     };
     // if text in input field, getLocalStorage, else display error msg
-    console.log(yourScore);
     if (yourScore.initials !== "") {
       highScore.push(yourScore);
       localStorage.setItem("high score", JSON.stringify(highScore));
@@ -386,7 +385,6 @@ function startOver(event) {
   var form = document.getElementById("form");
   var button = document.getElementById("play-again");
   var invalid = document.getElementById("invalid");
-  console.log(event.target);
   // otherwise perform the following based upon conditional statements
   if (invalid !== null) {
     title.remove();
