@@ -1,11 +1,13 @@
 # code-quiz
 
+![gif of quiz website](./assets/images/Javascript%20Code%20Quiz.gif)
+
 ---
 
 ## This is sloppy code!
 
 A great way to learn how to write clean code, is to immerse yourself in some sloppy code first!
-This project focused on the usage of Javascript.  I had fun with it and kept adding code to accomplish different things as those issues surfaced.  Through the process I learned what to expect from an application, and how to plan for it.  I can see the benefit from psuedo coding a project first, to keep form falling down a rabbit hole and having to claw your way back out with code that is less than intuitive.
+This project focused on the usage of Javascript.  I had fun with it and kept adding code to accomplish different things as new issues surfaced.  Through the process I learned what to expect from an application, and how to plan for it.  I can see the benefit from psuedo coding a project first, to keep form falling down a rabbit hole and having to claw your way back out with code that is less than intuitive.
 
 ---
 

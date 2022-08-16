@@ -259,6 +259,7 @@ function form() {
       score: score,
     };
     // if text in input field, getLocalStorage, else display error msg
+    console.log(yourScore);
     if (yourScore.initials !== "") {
       highScore.push(yourScore);
       localStorage.setItem("high score", JSON.stringify(highScore));
@@ -284,7 +285,9 @@ function error() {
 //   get localstorage
 function getLocalStorage() {
   var highScores = JSON.parse(localStorage.getItem("high score"));
-  highScore = highScores;
+  if(highScores !== null) {
+    highScore = highScores;
+  }
 }
 
 // timer function:
